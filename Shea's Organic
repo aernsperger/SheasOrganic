@@ -1,0 +1,108 @@
+""" M08 Final Project. This program will allow a customer to select how many jars
+    of salsa, guacamole, or pickles they would like to purchase. The total button
+    will give the subtotal, sales tax, and order total in a pop up box.
+    The customer can select pick up or delivery of their order. To see images
+    select with button. 
+    Amy Ernsperger - 10/9/21
+"""
+
+from breezypythongui import EasyFrame
+from tkinter import PhotoImage
+from tkinter.font import Font
+
+def main():
+#   Sheas_Organic = SheasOrganic()
+    SheasOrganic().mainloop()
+
+class SheasOrganic(EasyFrame):     #computes and totals a customer order
+
+    def __init__(self):         #set up window
+        EasyFrame.__init__(self, title = "Shea's Organic", width = 1250, height = 700)
+        #the size of the window allows for the images to fit on the screen
+        self.addLabel(text = "Thank you for choosing Shea's Organic. \n"
+                        "Choose your quantity on each. \n"
+                        "Click total to submit your order. \n"
+                        "Choose pick up or delivery. \n",  \
+                        row = 0, column = 1, columnspan = 2)
+
+        #salsa row
+        self.addLabel(text = "Salsa", row = 1, column = 0)
+        self.addLabel(text = "$6.00", row = 1, column = 1)
+        self.salsa = self.addIntegerField(row = 1, column = 1, value = 0, width = 5)     
+
+        #guacamole row
+        self.addLabel(text = "Guacamole", row = 2, column = 0)
+        self.addLabel(text = "$8.00", row = 2, column = 1)
+        self.guacamole = self.addIntegerField(value = 0, row = 2, column = 1, width = 5)   
+
+        #pickle row
+        self.addLabel(text = "Pickles", row = 3, column = 0)
+        self.addLabel(text = "$7.00", row = 3, column = 1)
+        self.pickles = self.addIntegerField(value = 0, row = 3, column = 1, width = 5)    
+
+        #buttons for the total, pick up, and delivery
+        self.totalBtn = self.addButton(text = "Total", row = 4, column = 0, \
+                                       command = self.getTotal)
+        self.pickUpBtn = self.addButton(text = "Pick Up", row = 4, column = 1, \
+                                        command = self.pickUp)
+        self.deliveryBtn = self.addButton(text = "Delivery", row = 4, column = 2,\
+                                          command = self.delivery)
+        #buttons to see images
+        self.salsaBtn = self.addButton(text = "Salsa Image", row = 5, column = 0, \
+                                       command = self.salsaImage)
+        self.guacamoleBtn = self.addButton(text = "Guac Image", row = 5, column = 1, \
+                                        command = self.guacImage)
+        self.picklesBtn = self.addButton(text = "Pickle Image", row = 5, column = 2, \
+                                         command = self.pickleImage)
+
+    def pickUp(self):
+        #allows customer to select pickup of order
+        self.messageBox(title = "Pickup", \
+                        message = "Please come in during business hours to pick up your order.")
+        
+    def delivery(self):
+        #allows customer to select delivery of order
+        self.messageBox(title = "Delivery", \
+                        message = "Your order will be delivered.")     
+
+    def getTotal(self):
+        #calculates and pops up a message box with
+        #the subtotal, sales tax, and order total.
+        try:
+            salsaTotal = self.salsa.getNumber() * 6
+            guacamoleTotal = self.guacamole.getNumber() * 8
+            picklesTotal = self.pickles.getNumber() * 7       
+            subTotal = abs(salsaTotal + guacamoleTotal + picklesTotal)
+            salesTax1 = subTotal * 0.07
+            salesTax = round(salesTax1, 2)
+            orderTotal = subTotal + salesTax
+            self.messageBox(title = "Total", message = "The subtotal is $ " + str(subTotal) + ". " + \
+                               "The sales tax is (7%) $ " + str(salesTax) + "." + \
+                            "The total is $ " + str(orderTotal) + ".")
+        except ValueError:
+            self.messageBox(title = "Error", message = "Must be a positive integer.")
+    
+    def salsaImage(self):
+        #image for salsa
+        imageLabel = self.addLabel(text = "", row = 0, column = 3, sticky = "NSEW")
+        textLabel = self.addLabel(text = "Salsa", row = 0, column = 4, sticky = "NSEW")
+        self.image = PhotoImage(file = "salsa.gif")
+        imageLabel["image"] = self.image
+       
+    def guacImage(self):
+        #image for guacamole
+        imageLabel = self.addLabel(text = "", row = 0, column = 3, sticky = "NSEW")
+        textLabel = self.addLabel(text = "Guacamole", row = 0, column = 4, sticky = "NSEW")
+        self.image = PhotoImage(file = "guacamole.gif")
+        imageLabel["image"] = self.image
+
+    def pickleImage(self):
+        #image for pickle
+        imageLabel = self.addLabel(text = "", row = 0, column = 3, sticky = "NSEW")
+        textLabel = self.addLabel(text = "Pickles", row = 0, column = 4, sticky = "NSEW")
+        self.image = PhotoImage(file = "pickle.gif")
+        imageLabel["image"] = self.image
+        
+if __name__ == "__main__":
+    main()
+
